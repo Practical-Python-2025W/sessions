@@ -3,6 +3,9 @@ Here you have nearly everything you need to know about git in the command line. 
 Following the unix conventions variables in `<>` need to be replaced by your own values.
 Also be careful what you do, some commands are dangerous and will make you loose data! Also note that some commands might not work if you have a very old git version.
 
+Also note: I might be an idiot and produce errors in my examples. I don't take any responsibility for demaged systems, lost data etc. 
+Please report any issues you might encounter.
+
 
 
 ## Table of Contents

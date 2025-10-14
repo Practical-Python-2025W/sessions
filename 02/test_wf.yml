@@ -30,6 +30,7 @@ jobs:
     # at least for 6 hours, thats the maximum time a job can run on GitHub's hosted runners
     runs-on: ubuntu-latest
     # environment variables that will be available to all steps in the job
+    # you might not need any
     env:
       Name: ${{github.repository}}
       RANDOM_BS: lksdjflksdfjsdlkfj

@@ -1,0 +1,110 @@
+# define the name of the workflow
+name: Build and publish
+# define the events that trigger the workflow
+on: 
+  # when code is  pushed to the main branch
+  push:
+    branches:
+      - main
+  # allows manual triggering of the workflow from the Actions tab (always nice to have for testing)
+  workflow_dispatch:
+  # allows triggering the workflow via the repository dispatch event (useful for triggering from other workflows)
+  # you can trigger this event using the GitHub API, e.g., via python's requests library this can be very useful
+  repository_dispatch:
+  # you can also schedule the workflow to run at specific times using cron syntax
+  schedule:
+    - cron: '0 0 * * 0' # runs at midnight every Sunday 
+    # quick note on cron syntax: '0 0 * * 0' means "at minute 0 of hour 0 on every day of the month, every month, and every Sunday"
+    # '0 12 * * 3' means "at minute 0 of hour 12 on every day of the month, every month, and every Wednesday"
+    # every hour every day: '0 * * * *'
+# a list of jobs to be executed as part of the workflow
+jobs:
+  # a job with the key 'build_pages'
+  build_pages:
+    description: does something important
+    # define the name of the job
+    name: important job
+    # specify the type of runner to execute the job on (ubuntu-latest is a commonly used option)
+    # this means: the job will run on the latest version of an Ubuntu Linux runner provided by GitHub Actions
+    # you have a full virtual machine at your disposal
+    # at least for 6 hours, thats the maximum time a job can run on GitHub's hosted runners
+    runs-on: ubuntu-latest
+    # environment variables that will be available to all steps in the job
+    env:
+      Name: ${{github.repository}}
+      RANDOM_BS: lksdjflksdfjsdlkfj
+    # permissions for the job, specifying what access the job has to the repository and GitHub features
+    # this is a security feature to limit the scope of what the job can do
+    # for example, if the job doesn't need to write to the repository, you can set permissions to read-only
+    # here, we give write permissions to contents and pages, and id-token for authentication purposes
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    # specify the environment for the job
+    # this allows you to define environment-specific settings, secrets, and protection rules
+    # for example, you might have different environments for development, staging, and production
+    # here, we are using the 'github-pages' environment, which might have specific settings
+    environment:
+      name: github-pages
+    # a list of steps to be executed as part of the job
+    # each step can run commands, use actions, or set up the environment
+    # steps are executed sequentially in the order they are defined
+    steps:
+    # the first step checks out the code from the repository using the actions/checkout action
+    # this is a common first step in many workflows, as it allows subsequent steps to work with the codebase
+    - name: Perform Checkout
+      uses: actions/checkout@v4
+    # the next step runs a shell script to fetch data
+    # this could be a custom script that you have in your repository to gather necessary data
+    # the script is executed in the runner's shell environment
+    # (it doesn't exist, this is just an example)
+    - name: fetch data
+      run: | 
+        ./shellscripts/fetch_data.sh
+    # the next step uses the stefanzweifel/git-auto-commit-action to automatically commit changes
+    # this is useful for workflows that modify files in the repository and want to save those changes
+    # the commit_message input specifies the message to use for the commit
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: fetched fresh data
+    # the next step installs necessary software and dependencies
+    # this could include installing packages via apt-get, setting up Python environments, etc.
+    # here, we install some stuff via apt-get and pip (again, just an example)
+    - name: Install stuff
+      run: |
+        sudo apt-get install somestuff
+        python -m pip config set global.break-system-packages true
+        pip install -r ./pyscripts/requirements.txt
+    # the next step runs a Python script
+    # this could be any Python script that performs a specific task as part of the workflow
+    # here, we run a script located in the pyscripts directory (again, just an example)
+    - name: run python script
+      run: |
+        python pyscripts/create_html.py
+    # now we prepare the deployment to GitHub Pages
+    # the first step uploads the generated HTML files as an artifact
+    # this is done using the actions/upload-pages-artifact action
+    # the path input specifies the directory containing the files to upload
+    # an artifact is a way to store files generated during a workflow run
+    # that can be used in subsequent steps or jobs
+    # you have to configure GitHub Pages in the repository settings to use this workflow
+    # typically, you would set the source to "GitHub Actions" in the Pages settings
+    # this workflow will then deploy the contents of the specified path to GitHub Pages
+    - name: Upload Pages Artifact 
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: "./html"
+    # the next step deploys the uploaded artifact to GitHub Pages
+    # this is done using the actions/deploy-pages action
+    # the token input uses the GITHUB_TOKEN secret, which is automatically provided by GitHub Actions
+    # this token has permissions based on the permissions defined earlier in the job
+    # the deploy-pages action takes care of deploying the files to GitHub Pages
+    # making the website available at the configured GitHub Pages URL
+    # ATTENTION: this action will create a website at https://<your-github-username>.github.io/<repository-name>/
+    # you are legally accountable for the content you publish there and to comply with Austrias super great telemedia laws
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+      with:
+        token: ${{secrets.GITHUB_TOKEN}}

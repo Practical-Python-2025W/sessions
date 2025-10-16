@@ -3,9 +3,9 @@ name: Build and publish
 # define the events that trigger the workflow
 on: 
   # when code is  pushed to the main branch
-  push:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
   # allows manual triggering of the workflow from the Actions tab (always nice to have for testing)
   workflow_dispatch:
   # allows triggering the workflow via the repository dispatch event (useful for triggering from other workflows)

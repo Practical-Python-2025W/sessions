@@ -64,7 +64,7 @@ Please report any issues you might encounter.
   git init
   git add --all
   git commit -m "Initial project version"
-  git remote add origin <git@github.com>:<User>/<UserRepo.git>
+  git remote add origin <url>
   git push -u origin main
   ```
 

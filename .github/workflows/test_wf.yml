@@ -21,7 +21,6 @@ on:
 jobs:
   # a job with the key 'build_pages'
   build_pages:
-    description: does something important
     # define the name of the job
     name: important job
     # specify the type of runner to execute the job on (ubuntu-latest is a commonly used option)

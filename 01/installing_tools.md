@@ -99,13 +99,17 @@ After installing Git, we need to make some basic configurations. These settings 
    git config --global user.email "alice@example.com"
    ```
 
+3. Specify behavior for conflicting changes
+   ```bash
+   # this will cause git to try to merge the different commits into a new one
+   # this is probably what you want as a beginner, but feel free to research this
+   # on your own
+   git config pull.rebase false
+   ```
+
 To verify your settings, you can check them by typing:
 ```bash
 git config --global user.name
-```
-and
-```bash
-git config --global user.email
 ```
 
 ---

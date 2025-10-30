@@ -1,0 +1,8 @@
+{
+    "rounds": 5,
+    "output_path": "results/results.txt",
+    "count": 20,
+    "min_val": 43,
+    "max_val": 5000,
+    "threshold": 30
+}

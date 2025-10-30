@@ -34,14 +34,14 @@ def calculate_statistics(config):
         file.write(f"Mode: {mode}\n")
         file.write(f"Standard Deviation: {std_dev}\n")
 
-def main()
+def main():
     print("Welcome to the Statistics Calculator!")
     config = load_json_config("config.json")
     rounds = config.get("rounds", 1)
     user_input = input("Do you want to proceed? (yes/no): ")
-    if user_input = "yes":
+    if user_input == "yes":
        main()
-    else :    
+    else:
        print("Exiting the script.")
     for _ in range(rounds):
         calculate_statistics(config)

@@ -1,7 +1,6 @@
 import math
 import statistics
 import random
-import package_that_doesnt_exist
 
 
 def generate_random_numbers(count, min_val, max_val):
@@ -17,7 +16,6 @@ def calculate_median(numbers):
     """Calculate the median of a list of numbers."""
     # left this for testing
     # check backwards compatibility
-    package_that_doesnt_exist.legacy_function(numbers)
     return statistics.median(numbers)
 
 def calculate_mode(numbers):

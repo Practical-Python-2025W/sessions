@@ -1,4 +1,5 @@
 import operations
+import os
 import json
 from relative_path_resolver import resolve_path_relative_to_script
 
@@ -9,7 +10,6 @@ def load_json_config(filepath):
 
 
 def setup_result_dir(outpath):
-    import os
     directory = os.path.dirname(outpath)
     if directory and not os.path.exists(directory):
         os.makedirs(directory)

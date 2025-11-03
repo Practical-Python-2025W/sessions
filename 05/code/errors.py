@@ -1,10 +1,18 @@
 import operations
+import json
+from relative_path_resolver import resolve_path_relative_to_script
 
 def load_json_config(filepath):
-    import json
     with open(filepath, 'r') as file:
         config = json.load(file)
     return config
+
+
+def setup_result_dir(outpath):
+    import os
+    directory = os.path.dirname(outpath)
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
 
 
 def calculate_statistics(config):
@@ -21,6 +29,7 @@ def calculate_statistics(config):
     mode = operations.calculate_mode(filtered_numbers)
     std_dev = operations.calculate_standard_deviation(filtered_numbers)
     outpath = config.get("output_path", "results.txt")
+    setup_result_dir(outpath)
     print(f"Mean: {mean}")
     print(f"Median: {median}")
     print(f"Mode: {mode}")
@@ -34,17 +43,18 @@ def calculate_statistics(config):
         file.write(f"Mode: {mode}\n")
         file.write(f"Standard Deviation: {std_dev}\n")
 
+
 def main():
     print("Welcome to the Statistics Calculator!")
-    config = load_json_config("config.json")
+    json_path = resolve_path_relative_to_script("config.json")
+    config = load_json_config(json_path)
     rounds = config.get("rounds", 1)
     user_input = input("Do you want to proceed? (yes/no): ")
     if user_input == "yes":
-       main()
+        for _ in range(rounds):
+            calculate_statistics(config)
     else:
        print("Exiting the script.")
-    for _ in range(rounds):
-        calculate_statistics(config)
 
 if __name__ == "__main__":
    main()

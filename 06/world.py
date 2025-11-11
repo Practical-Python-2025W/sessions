@@ -66,7 +66,7 @@ class World:
 
 # Example usage:
 # let's create an instance of the World class with a specific configuration
-# calling the class like a function will use its __init__ function, we definded above
+# calling the class like a function will use its __init__ function we defined above
 one_world_of_many = World({"width": 5, "height": 5})
 # printing the world instance will invoke the __str__ method we defined above
 print(one_world_of_many)

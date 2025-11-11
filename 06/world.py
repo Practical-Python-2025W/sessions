@@ -7,7 +7,7 @@ from cell import Cell
 # the __init__ method initializes the world with a configuration dictionary (you'll have to provide).
 # So each world is based on the blueprint (our class) and the configuration provided.
 # As you can see, the World class has methods that all take the self attribute as a first attribute.
-# This is because they are instance methods that operate on the instance of the class (i.e. a concrete world) itself,
+# This is because they are instance methods that operate on the instance of the class (i.e. a concrete world) it*self*,
 # meaning they can access and modify the instance's attributes and other methods
 
 class World:
@@ -48,7 +48,7 @@ class World:
         raise NotImplementedError("Upsi, this method is not yet implemented.")
     
     def toggle_day_night(self):
-        """__summary_
+        """_summary_
         this method toggles the is_day attribute of the World instance
         """ 
         self.is_day = not self.is_day

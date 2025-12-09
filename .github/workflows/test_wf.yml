@@ -12,8 +12,8 @@ on:
   # you can trigger this event using the GitHub API, e.g., via python's requests library this can be very useful
   repository_dispatch:
   # you can also schedule the workflow to run at specific times using cron syntax
-  schedule:
-    - cron: '0 0 * * 0' # runs at midnight every Sunday 
+  #schedule:
+  #  - cron: '0 0 * * 0' # runs at midnight every Sunday 
     # quick note on cron syntax: '0 0 * * 0' means "at minute 0 of hour 0 on every day of the month, every month, and every Sunday"
     # '0 12 * * 3' means "at minute 0 of hour 12 on every day of the month, every month, and every Wednesday"
     # every hour every day: '0 * * * *'

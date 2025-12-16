@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0">
-  <teiHeader>
-    <fileDesc>
-      <titleStmt>
-        <title>Good Poem</title>
-        <author>CFH</author>
-      </titleStmt>
-      <publicationStmt>
-        <p>Unpublished</p>
-      </publicationStmt>
-      <sourceDesc>
-        <p>Made for demo purposes.</p>
-      </sourceDesc>
-    </fileDesc>
-  </teiHeader>
-  <text>
-    <body>
-      <lg type="stanza">
-        <l>I sit and think the greatest thoughts</l>
-        <l>and write great poems of all sorts</l>
-        <l>for x in range(105):</l>
-        <l>   print("I need chocolate in my life.")</l>
-      </lg>
-    </body>
-  </text>
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Good Poem</title>
+                <author>CFH</author>
+            </titleStmt>
+            <publicationStmt>
+                <p>Unpublished</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Made for demo purposes.</p>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <lg type="stanza">
+                <l>I sit and think the greatest thoughts</l>
+                <l>and write great poems of all sorts</l>
+                <l>for x in range(105):</l>
+                <l>   print("I need chocolate in my life.")</l>
+            </lg>
+        </body>
+    </text>
 </TEI>

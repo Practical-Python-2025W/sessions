@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this is some madeup file -->
+<configuration>
+  <appSettings>
+    <add key="ApiEndpoint" value="https://8.8.8.8"/>
+    <add key="FeatureXEnabled" value="true"/>
+  </appSettings>
+  <connectionStrings>
+    <add name="MainDb"
+         connectionString="Server=db.example.com;Database=main;Trusted_Connection=True;"
+         providerName="System.Data.SqlClient"/>
+  </connectionStrings>
+</configuration>

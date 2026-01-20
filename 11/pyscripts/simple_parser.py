@@ -21,24 +21,26 @@ class Plaintexter:
     """
 
     text_container_xpath = "//body//text"
-    opening_mark = '<'
-    closing_mark = '>'
-    ############
-    ignored_chars = ['\n', '\t', '\r']
-    punctuation_whitespace_after = [";", ",", ":", ".", ")", "]", "}"]
-    punctuation_whitespace_before = ["(", "[", "{"]
-    
-    def __init__(self,xml_file: str, text_container_xpath: str = None):
-        """Load and prepare the XML tree from the given file path."""
-        self.plain_text = ''
+    opening_mark = "<"
+    closing_mark = ">"
+    ignored_whitespace_chars = ["\n", "\t", "\r"]
+    no_whitespace_before = [";", ",", ":", ".", ")", "]", "}", "“"]
+    no_whitespace_after = ["(", "[", "{", "„"]
+    whitespace = " "
+    single_quote = "'"
+    double_quote = '"'
+    indifferent_quotation_marks = [single_quote, double_quote]
+
+    def __init__(self, xml_file: str, text_container_xpath: str | None = None):
+        self.no_whitespace_after = self.no_whitespace_after.copy()
+        self.no_whitespace_before = self.no_whitespace_before.copy()
+        self.plain_text = ""
         if text_container_xpath:
             self.text_container_xpath = text_container_xpath
-        # Maps indices in plain_text (int) to the corresponding
-        # character indices in the original xml_string (int).
-        # Example: mapping[5] == 12 means plain_text[5] comes from / equals
-        # xml_string[12].
         self.mapping: dict[int, int] = {}
         self._load(xml_file)
+        self.single_quotes_open = False
+        self.double_quotes_open = False
     
     def plaintext_index_to_xml_index(self, plain_index: int) -> int:
         """Return the corresponding index in the original XML string.
@@ -88,17 +90,38 @@ class Plaintexter:
         """Reload the parser from file"""
         self._load(self.xml_file)
     
-    def check_whitespace(self, char, previous_char, next_char) -> bool: 
-        if char in self.ignored_chars:
-            return False
-        if char == " ":
-            if previous_char == " ":
-                return False
-            if next_char and next_char in self.punctuation_whitespace_after:
-                return False
-            if previous_char and previous_char in self.punctuation_whitespace_before:
-                return False
-        return True
+    def ignore_whitespace(self, char) -> bool: 
+        if char == self.whitespace:
+           if not self.plain_text:
+               return True
+           else:
+               if self.plain_text[-1] == self.whitespace:
+                    return True
+               elif self.plain_text[-1] in self.no_whitespace_after:
+                    return True
+        return False
+               
+    def handle_quotation_marks(self, char) -> str:
+        if char == self.single_quote:
+            self.single_quotes_open = not self.single_quotes_open
+            if self.single_quotes_open:
+                self.no_whitespace_after.append(self.single_quote)
+                if self.single_quote in self.no_whitespace_before:
+                    self.no_whitespace_before.remove(self.single_quote)
+            else:
+                if self.single_quote in self.no_whitespace_after:
+                    self.no_whitespace_after.remove(self.single_quote)
+                self.no_whitespace_before.append(self.single_quote)
+        elif char == self.double_quote:
+            self.double_quotes_open = not self.double_quotes_open
+            if self.double_quotes_open:
+                self.no_whitespace_after.append(self.double_quote)
+                if self.double_quote in self.no_whitespace_before:
+                    self.no_whitespace_before.remove(self.double_quote)
+            else:
+                if self.double_quote in self.no_whitespace_after:
+                    self.no_whitespace_after.remove(self.double_quote)
+                self.no_whitespace_before.append(self.double_quote)
     
     def parse(self) -> None:
         """Builds ``plain_text`` and the mapping from the XML body.
@@ -107,10 +130,9 @@ class Plaintexter:
         ``mapping`` links each plain-text index back to a position in
         ``xml_string``.
         """
-        plain_text = ''
+        self.plain_text = ''
         tag_open = False
-        previous_char = ''
-        mapping = {}
+        self.mapping = {}
         plain_char_index = -1
         xml_char_index = -1
         for char in self.xml_string:
@@ -121,16 +143,24 @@ class Plaintexter:
                 tag_open = False
             else:
                 if not tag_open:
-                    next_xml_char = self.xml_string[xml_char_index + 1] if xml_char_index + 1 < len(self.xml_string) else ''
-                    if self.check_whitespace(char, previous_char, next_xml_char):
-                        plain_text += char
+                    if char in self.indifferent_quotation_marks:
+                        self.handle_quotation_marks(char)
+                    elif char in self.ignored_whitespace_chars:
+                        char = self.whitespace
+                    if not self.ignore_whitespace(char):
+                        if (
+                            char in self.no_whitespace_before and 
+                            self.plain_text and 
+                            self.plain_text[-1] == self.whitespace
+                        ):
+                            self.plain_text = self.plain_text[:-1]
+                            plain_char_index -= 1
+                        self.plain_text += char
                         plain_char_index += 1
-                        mapping[plain_char_index] = xml_char_index
+                        self.mapping[plain_char_index] = xml_char_index
                 else:
                     pass
-            previous_char = char
-        self.plain_text = plain_text
-        self.mapping = mapping
+
         
     def test(self) -> None:
         """Debug helper that prints the mapping and the resulting text."""

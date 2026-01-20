@@ -23,7 +23,10 @@ class Plaintexter:
     text_container_xpath = "//body//text"
     opening_mark = '<'
     closing_mark = '>'
+    ############
     ignored_chars = ['\n', '\t', '\r']
+    punctuation_whitespace_after = [";", ",", ":", ".", ")", "]", "}"]
+    punctuation_whitespace_before = ["(", "[", "{"]
     
     def __init__(self,xml_file: str, text_container_xpath: str = None):
         """Load and prepare the XML tree from the given file path."""
@@ -85,6 +88,18 @@ class Plaintexter:
         """Reload the parser from file"""
         self._load(self.xml_file)
     
+    def check_whitespace(self, char, previous_char, next_char) -> bool: 
+        if char in self.ignored_chars:
+            return False
+        if char == " ":
+            if previous_char == " ":
+                return False
+            if next_char and next_char in self.punctuation_whitespace_after:
+                return False
+            if previous_char and previous_char in self.punctuation_whitespace_before:
+                return False
+        return True
+    
     def parse(self) -> None:
         """Builds ``plain_text`` and the mapping from the XML body.
 
@@ -106,7 +121,8 @@ class Plaintexter:
                 tag_open = False
             else:
                 if not tag_open:
-                    if char not in self.ignored_chars and not (char == " " and previous_char == " "):
+                    next_xml_char = self.xml_string[xml_char_index + 1] if xml_char_index + 1 < len(self.xml_string) else ''
+                    if self.check_whitespace(char, previous_char, next_xml_char):
                         plain_text += char
                         plain_char_index += 1
                         mapping[plain_char_index] = xml_char_index

@@ -76,7 +76,7 @@ class Plaintexter:
         self.xml_string = etree.tostring(
             self.text_container,
             encoding='unicode',
-            method='text',
+            method='xml',  # keep tags!!!!
         )
         self.plain_text = ''
         self.mapping = {}
